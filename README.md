@@ -32,13 +32,17 @@ PROJECT_ID=<project-id>
 gcloud config set project $PROJECT_ID
 ```
 
-let's deploy
+go to directory you want to deploy
 ```bash
-gcloud functions deploy hello --runtime go111 --entry-point F --trigger-http
+# move directory
+cd webhook
+
+# deploy webhook
+gcloud functions deploy webhook --runtime go111 --env-vars-file ../env.yaml --entry-point Webhook --region asia-northeast1 --trigger-http
 ```
 
 delete function
 ```bash
 # hello is function name
-gcloud functions delete hello
+gcloud functions delete functionname
 ```

@@ -33,8 +33,7 @@ func Webhook(w http.ResponseWriter, r *http.Request) {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
 				userID := event.Source.UserID
-				// print user id
-				log.Println(userID)
+				log.Println(userID) // print user id
 				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do(); err != nil {
 					log.Print(err)
 				}
