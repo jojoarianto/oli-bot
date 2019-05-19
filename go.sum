@@ -1,2 +1,4 @@
+github.com/jojoarianto/oli-bot/pushmessage v0.0.0-20190519144433-af69b1ca8f99 h1:mrW+J/FRuS7AqgW16LZRx7LoojtZdn0AZGOv21rKDaA=
+github.com/jojoarianto/oli-bot/pushmessage v0.0.0-20190519144433-af69b1ca8f99/go.mod h1:S67QgYp4bNx2x+MHqlj/AfLlXe4vdQytF4qMnYM9exU=
 github.com/line/line-bot-sdk-go v6.3.0+incompatible h1:KjgZ4BMI1XekUpuG0PQM3oPaMF++VksXqoliG2lDw44=
 github.com/line/line-bot-sdk-go v6.3.0+incompatible/go.mod h1:0RjLjJEAU/3GIcHkC3av6O4jInAbt25nnZVmOFUgDBg=
