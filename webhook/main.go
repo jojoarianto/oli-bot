@@ -32,11 +32,33 @@ func Webhook(w http.ResponseWriter, r *http.Request) {
 		if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
-				userID := event.Source.UserID
-				log.Println(userID) // print user id
-				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do(); err != nil {
-					log.Print(err)
+
+				switch message.Text {
+				case "/profile":
+					userID := event.Source.UserID
+					if userID != "" {
+						if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(userID)).Do(); err != nil {
+							log.Print(err)
+						}
+					}
+				case "/group":
+					groupID := event.Source.GroupID
+					if groupID != "" {
+						if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(groupID)).Do(); err != nil {
+							log.Print(err)
+						}
+					}
+				case "/room":
+					roomID := event.Source.RoomID
+					if roomID != "" {
+						if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(roomID)).Do(); err != nil {
+							log.Print(err)
+						}
+					}
+				default:
+					// not implement yet
 				}
+
 			}
 		}
 	}

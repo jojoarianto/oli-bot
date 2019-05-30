@@ -2,3 +2,4 @@ env.yaml
 play.go
 go.mod
 go.sum
+play/
