@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/jojoarianto/webhook/route"
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
@@ -43,7 +44,7 @@ func Webhook(w http.ResponseWriter, r *http.Request) {
 
 					switch inputArr[0] { // filter for first word
 					case "/register":
-						str := "Hello you are in registering"
+						str := route.Register(inputArr)
 						if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(str)).Do(); err != nil {
 							log.Print(err)
 						}
