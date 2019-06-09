@@ -1,4 +1,4 @@
-package pushmessage
+package template
 
 import "fmt"
 

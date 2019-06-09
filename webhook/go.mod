@@ -1,4 +1,4 @@
-module github.com/jojoarianto/webhook
+module github.com/jojoarianto/oli-bot/webhook
 
 go 1.12
 

@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/jojoarianto/webhook/route"
+	"github.com/jojoarianto/oli-bot/webhook/route"
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
@@ -44,10 +44,10 @@ func Webhook(w http.ResponseWriter, r *http.Request) {
 
 					switch inputArr[0] { // filter for first word
 					case "/register":
-						str := route.Register(inputArr)
-						if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(str)).Do(); err != nil {
-							log.Print(err)
-						}
+
+						// call the register prosses handler
+						RegisterHandler(event, bot, inputArr)
+
 					case "/profile":
 						userID := event.Source.UserID
 						if userID != "" {
@@ -85,5 +85,51 @@ func Webhook(w http.ResponseWriter, r *http.Request) {
 
 			}
 		}
+	}
+}
+
+// RegisterHandler for handling registration line (group, individe or room) to subscription
+// inputArr is equal with {"email", "password", "line_id", "type"}
+func RegisterHandler(event *linebot.Event, bot *linebot.Client, inputArr []string) {
+
+	const (
+		Group    = "group"
+		Room     = "room"
+		Personal = "personal"
+	)
+
+	var (
+		lineAccountType = Personal // set default to personal
+		lineAccountID   = ""       // set default empty id
+	)
+
+	//	cek apakah dia register di dalam group
+	groupID := event.Source.GroupID
+	if groupID != "" {
+		lineAccountType = Group
+		lineAccountID = groupID
+	}
+
+	// cek apakah dia register di dalam room
+	roomID := event.Source.RoomID
+	if roomID != "" {
+		lineAccountType = Room
+		lineAccountID = roomID
+	}
+
+	// jika tidak semua apakah dia menambahkan di dalam private message mode
+	userID := event.Source.UserID
+	if groupID == "" && roomID == "" {
+		lineAccountType = Personal
+		lineAccountID = userID
+	}
+
+	// inject for fill lineID & LineAccountType
+	inputArr = append(inputArr, lineAccountID, lineAccountType)
+
+	// sent regiter with type status
+	str := route.Register(inputArr)
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(str)).Do(); err != nil {
+		log.Print(err)
 	}
 }

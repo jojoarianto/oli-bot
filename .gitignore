@@ -3,3 +3,4 @@ play.go
 go.mod
 go.sum
 play/
+.idea/

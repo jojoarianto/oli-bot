@@ -3,7 +3,6 @@ package route
 import (
 	"bytes"
 	"encoding/json"
-	"log"
 	"net/http"
 )
 
@@ -11,7 +10,7 @@ import (
 func Register(inputArr []string) string {
 
 	// input must have 2 parameter
-	if len(inputArr) != 4 {
+	if len(inputArr) < 4 {
 		return "Parameter yang anda inputkan salah"
 	}
 
@@ -19,11 +18,7 @@ func Register(inputArr []string) string {
 	jsonData := map[string]string{"email": inputArr[1], "password": inputArr[2], "line_id": inputArr[3], "type": inputArr[4]}
 	jsonValue, _ := json.Marshal(jsonData)
 
-	response, err := http.Post("http://portal.olimpiade.id/api/line-subscription", "application/json", bytes.NewBuffer(jsonValue))
-	if err != nil {
-		log.Printf("The HTTP request failed with error %s\n", err)
-		return "login gagal"
-	}
+	response, _ := http.Post("http://portal.olimpiade.id/api/line-subscription", "application/json", bytes.NewBuffer(jsonValue))
 
 	if response.StatusCode != 200 { // login failed as long as response code is not equal with 200
 		return "login gagal"
