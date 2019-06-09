@@ -2,8 +2,13 @@ package sentpaymentnotif
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/jojoarianto/oli-bot/services/api/payment/repository/mongodb"
+	"github.com/jojoarianto/oli-bot/services/pushmessage/config"
 	"github.com/jojoarianto/oli-bot/services/pushmessage/usecase"
+	"log"
 	"net/http"
+	"os"
 )
 
 // DtoRequest data json from user input
@@ -23,11 +28,11 @@ func SendPaymentNotif(w http.ResponseWriter, r *http.Request) {
 	// send push message to all row result
 	// update status payment on database
 
+	var req DtoRequest
+
 	// filter method only work on POST
 	switch r.Method {
 	case http.MethodPost:
-		var req DtoRequest
-
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			http.Error(w, "400 - Bad Request", http.StatusBadRequest)
 			return
@@ -43,16 +48,38 @@ func SendPaymentNotif(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// get user_id & event_id
+	db := config.Connect(os.Getenv("DB_CONNECTION"), os.Getenv("DB_NAME"))
+	repo := mongodb.NewGetPayment(db)
+	payment, err := repo.GetPayment(req.UserID) // ada payment
+	if err != nil {
+		log.Print(err)
+		return
+	}
+
+	// validate apakah sudah pernah dikirim notif atau sudah di approve
+	if payment.PaymentStatus != 1 {
+		// no need to send notification if status not equal with 1 (means only on waiting state)
+		return
+	}
+
+	// search on database table line_subscription where event_id
+
+	// set up imageurl
+	imageURL := fmt.Sprintf("https://cdn2.olimpiade.id/ero/payment-proof/%s", payment.PaymentProof)
 
 	// send push message
-	usecase.PushMessage(
+	err = usecase.PushMessage(
 		"C0c5f795d51b9f447b966c79b772bd8ce",
-		"https://cdn2.olimpiade.id/ero/payment-proof/payment-5ba066245b192836296c89f7.1541062118497434243015.jpg",
-		"Irianto",
-		"Rp. 100.000",
-		"Bank Mandiri",
-		"20-10-2019",
+		imageURL,
+		payment.AccountName,
+		payment.Total,
+		payment.BankName,
+		payment.TransferAt,
 	)
+	if err != nil {
+		return
+	}
 
 	// update status payment on database
+
 }

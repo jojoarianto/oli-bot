@@ -9,7 +9,7 @@ import (
 )
 
 // PushMessage method to send bc
-func PushMessage(to, imageUrl, name, nominal, bank, strDate string) {
+func PushMessage(to, imageUrl, name, nominal, bank, strDate string) error {
 
 	bot, err := linebot.New(
 		os.Getenv("CHANNEL_SECRET"),
@@ -17,6 +17,7 @@ func PushMessage(to, imageUrl, name, nominal, bank, strDate string) {
 	)
 	if err != nil {
 		log.Fatal(err)
+		return err
 	}
 
 	// read input from request
@@ -25,10 +26,12 @@ func PushMessage(to, imageUrl, name, nominal, bank, strDate string) {
 	contents, err := linebot.UnmarshalFlexMessageJSON([]byte(jsonString))
 	if err != nil {
 		log.Print(err)
+		return err
 	}
 
 	// looping each subscription
 	if _, err := bot.PushMessage(to, linebot.NewFlexMessage("New payment need approval", contents)).Do(); err != nil {
 		log.Print(err)
+		return err
 	}
 }
