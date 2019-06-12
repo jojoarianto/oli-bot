@@ -3,12 +3,14 @@ package sentpaymentnotif
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jojoarianto/oli-bot/services/api/payment/repository/mongodb"
-	"github.com/jojoarianto/oli-bot/services/pushmessage/config"
-	"github.com/jojoarianto/oli-bot/services/pushmessage/usecase"
 	"log"
 	"net/http"
 	"os"
+
+	linesubscription "github.com/jojoarianto/oli-bot/services/api/linesubscrition/repository/mongodb"
+	getpayment "github.com/jojoarianto/oli-bot/services/api/payment/repository/mongodb"
+	"github.com/jojoarianto/oli-bot/services/pushmessage/config"
+	"github.com/jojoarianto/oli-bot/services/pushmessage/usecase"
 )
 
 // DtoRequest data json from user input
@@ -47,9 +49,11 @@ func SendPaymentNotif(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// get user_id & event_id
+	// get db connection
 	db := config.Connect(os.Getenv("DB_CONNECTION"), os.Getenv("DB_NAME"))
-	repo := mongodb.NewGetPayment(db)
+
+	// get user_id & event_id
+	repo := getpayment.NewGetPayment(db)
 	payment, err := repo.GetPayment(req.UserID) // ada payment
 	if err != nil {
 		log.Print(err)
@@ -63,6 +67,12 @@ func SendPaymentNotif(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// search on database table line_subscription where event_id
+	repoLineSubscription := linesubscription.NewGetLineSubscription(db)
+	lineSubscritions, err := repo.GetByEventId("") // call get line_subscription
+	if err != nil {
+		log.Print(err)
+		return
+	}
 
 	// set up imageurl
 	imageURL := fmt.Sprintf("https://cdn2.olimpiade.id/ero/payment-proof/%s", payment.PaymentProof)
