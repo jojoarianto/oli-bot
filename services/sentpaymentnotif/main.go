@@ -68,11 +68,13 @@ func SendPaymentNotif(w http.ResponseWriter, r *http.Request) {
 
 	// search on database table line_subscription where event_id
 	repoLineSubscription := linesubscription.NewGetLineSubscription(db)
-	lineSubscritions, err := repo.GetByEventId("") // call get line_subscription
+	lineSubscritions, err := repoLineSubscription.GetByEventId("") // call get line_subscription
 	if err != nil {
 		log.Print(err)
 		return
 	}
+
+	log.Print(lineSubscritions)
 
 	// set up imageurl
 	imageURL := fmt.Sprintf("https://cdn2.olimpiade.id/ero/payment-proof/%s", payment.PaymentProof)

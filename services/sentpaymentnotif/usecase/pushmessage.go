@@ -1,9 +1,10 @@
 package usecase
 
 import (
-	"github.com/jojoarianto/oli-bot/services/pushmessage/template"
 	"log"
 	"os"
+
+	"github.com/jojoarianto/oli-bot/services/pushmessage/template"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 )
@@ -34,4 +35,6 @@ func PushMessage(to, imageUrl, name, nominal, bank, strDate string) error {
 		log.Print(err)
 		return err
 	}
+
+	return nil
 }
