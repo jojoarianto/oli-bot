@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	linesubscription "github.com/jojoarianto/oli-bot/services/api/linesubscrition/repository/mongodb"
+	linesubscription "github.com/jojoarianto/oli-bot/services/api/line/repository/mongodb"
 	getpayment "github.com/jojoarianto/oli-bot/services/api/payment/repository/mongodb"
 	"github.com/jojoarianto/oli-bot/services/pushmessage/config"
 	"github.com/jojoarianto/oli-bot/services/pushmessage/usecase"
