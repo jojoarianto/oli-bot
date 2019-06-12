@@ -1,8 +1,8 @@
 package mongodb
 
 import (
-	"github.com/jojoarianto/oli-bot/services/api/linesubscription/model"
-	"github.com/jojoarianto/oli-bot/services/api/linesubscription/repository"
+	"github.com/jojoarianto/oli-bot/services/api/line/model"
+	"github.com/jojoarianto/oli-bot/services/api/line/repository"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
